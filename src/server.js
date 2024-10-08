@@ -1,24 +1,26 @@
-import express from 'express';
-import cors from 'cors';
-import feedbackRouter from './routes/feedbackRoutes.js';
-import { createTable } from './db.js';
+import express from 'express';  // Importiert das Express-Paket
+import cors from 'cors';  // Importiert das CORS-Paket für Cross-Origin Resource Sharing
+import feedbackRouter from './routes/feedbackRoutes.js';  // Importiert die Feedback-Routen
+import { createTable } from './db.js';  // Importiert die Funktion zum Erstellen der Tabelle
 
-// Creating the express app
+// Erstellen der Express-App
 const app = express();
-const PORT = 3000;
+const PORT = 3000;  // Definiert den Port, auf dem der Server laufen soll
 
 // Setup CORS
-app.use(cors());
-// Middleware for parsing JSON
-app.use(express.json());
+app.use(cors());  // Aktiviert CORS, um Anfragen von anderen Ursprüngen zuzulassen
+// Middleware für das Parsen von JSON-Daten
+app.use(express.json());  // Ermöglicht das Parsen von JSON im Anforderungs-Body
 
-// Creating the feedback table
-createTable();
+// Erstellen der Feedback-Tabelle
+createTable();  // Ruft die Funktion auf, um die Feedback-Tabelle zu erstellen
 
-app.use('/', feedbackRouter);
+// Verwendung der Feedback-Routen
+app.use('/', feedbackRouter);  // Bindet die Feedback-Routen an die Haupt-URL
 
-// Start the app
-app.listen(PORT, ()=> {
-    console.log(`Server laeuft auf http://localhost:${PORT}`);
+// Startet die App
+app.listen(PORT, () => {
+    console.log(`Server läuft auf http://localhost:${PORT}`);  // Gibt eine Bestätigung aus, dass der Server läuft
 });
+
 

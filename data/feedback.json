@@ -1,26 +1,32 @@
-[
+/**
+ * JSON-Datenstruktur, die eine Sammlung von Objekten repräsentiert.
+ * Jedes Objekt enthält:
+ * - title: Ein Titel des Feedback-Elements.
+ * - text: Der Text des Feedback-Elements.
+ */
+ [
   {
-    "title": "abc",
-    "text": "Gaudeamus igitur iuvenes dum sumus."
+    "title": "abc",  // Der Titel des ersten Feedbacks
+    "text": "Gaudeamus igitur iuvenes dum sumus."  // Der Inhalt des ersten Feedbacks
   },
   {
-    "title": "bcd",
-    "text": "Gaudeamus igitur iuvenes dum sumus."
+    "title": "bcd",  // Der Titel des zweiten Feedbacks
+    "text": "Gaudeamus igitur iuvenes dum sumus."  // Der Inhalt des zweiten Feedbacks
   },
   {
-    "title": "cde",
-    "text": "Gaudeamus igitur iuvenes dum sumus."
+    "title": "cde",  // Der Titel des dritten Feedbacks
+    "text": "Gaudeamus igitur iuvenes dum sumus."  // Der Inhalt des dritten Feedbacks
   },
   {
-    "title": "def",
-    "text": "Gaudeamus igitur iuvenes dum sumus."
+    "title": "def",  // Der Titel des vierten Feedbacks
+    "text": "Gaudeamus igitur iuvenes dum sumus."  // Der Inhalt des vierten Feedbacks
   },
   {
-    "title": "efg",
-    "text": "Gaudeamus igitur iuvenes dum sumus."
+    "title": "efg",  // Der Titel des fünften Feedbacks
+    "text": "Gaudeamus igitur iuvenes dum sumus."  // Der Inhalt des fünften Feedbacks
   },
   {
-    "title": "cde",
+    "title": "cde",  // Mehrere Feedbacks mit dem Titel "cde", möglicherweise Duplikate
     "text": "Gaudeamus igitur iuvenes dum sumus."
   },
   {
