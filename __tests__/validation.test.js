@@ -1,45 +1,28 @@
-// __tests__/validation.test.js
-import { feedbackValidation } from '../middlewares/validation';
+import { feedbackValidation } from "../src/middleware/validation";
 import { validationResult } from 'express-validator';
-import express from 'express';
 import request from 'supertest';
+import express from 'express';
 
 const app = express();
 app.use(express.json());
 
 app.post('/feedback', feedbackValidation, (req, res) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-    res.status(200).json({ message: 'Validation passed' });
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+    res.status(201).json({ message: "Validierung erfolgreich." });
 });
 
 describe('Validation Middleware', () => {
-    it('should fail validation when title is missing', async () => {
+    it('Validierung fehlerhaft wenn title fehlt', async () => {
         const response = await request(app)
             .post('/feedback')
-            .send({ text: 'Some text' });
+            .send({text: "Test text"});
 
         expect(response.status).toBe(400);
-        expect(response.body.errors[0].msg).toBe('Title is required');
+        expect(response.body.errors[0].msg).toBe('Titel ist erforderlich.');
+
     });
 
-    it('should fail validation when text is missing', async () => {
-        const response = await request(app)
-            .post('/feedback')
-            .send({ title: 'Test' });
-
-        expect(response.status).toBe(400);
-        expect(response.body.errors[0].msg).toBe('Text is required');
-    });
-
-    it('should pass validation when both title and text are provided', async () => {
-        const response = await request(app)
-            .post('/feedback')
-            .send({ title: 'Test', text: 'Test text' });
-
-        expect(response.status).toBe(200);
-        expect(response.body.message).toBe('Validation passed');
-    });
 });

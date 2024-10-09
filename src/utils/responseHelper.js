@@ -1,19 +1,23 @@
 /**
- * Sendet eine erfolgreiche Antwort zurück.
+ * Sendet eine erfolgreiche JSON-Antwort.
  * 
- * Diese Funktion wird verwendet, um eine standardisierte Erfolgsmeldung mit den
- * entsprechenden Daten und einer optionalen Nachricht an den Client zu senden.
- * 
- * @param {Object} res - Das Antwortobjekt, um die Antwort an den Client zu senden.
- * @param {Object} data - Die Daten, die an den Client zurückgegeben werden.
- * @param {string} [message="Anfrage erfolgreich."] - Eine optionale Nachricht, die standardmäßig gesetzt ist.
+ * @function sendSuccess
+ * @param {Object} res - Das Antwortobjekt, um die HTTP-Antwort zu senden.
+ * @param {Object|Array|null} data - Die Daten, die in der Antwort enthalten sind (kann ein Objekt, Array oder null sein).
+ * @param {string} [message="Anfrage erfolgreich."] - Eine optionale Erfolgsnachricht.
  */
-export const sendSuccess = (res, data, message = "Anfrage erfolgreich.") => {
-    // Senden einer Antwort mit Statuscode 200 (OK) und der Erfolgsnachricht und Daten
-    res.status(200).json({ message, data });
+export const sendSuccess = (res, data, message = "Anfrage erfolgreich.", statusCode = 200) => {
+    res.status(statusCode).json({ message, data });
 };
 
 /**
- * Sendet eine Fehlerantwort zurück.
+ * Sendet eine Fehlerantwort im JSON-Format.
  * 
- * Diese Funktion wird verwendet,
+ * @function sendError
+ * @param {Object} res - Das Antwortobjekt, um die HTTP-Antwort zu senden.
+ * @param {string} error - Die Fehlermeldung, die in der Antwort enthalten ist.
+ * @param {number} [statusCode=500] - Der HTTP-Statuscode, der gesendet werden soll (Standard ist 500 für Serverfehler).
+ */
+export const sendError = (res, error, statusCode = 500) => {
+    res.status(statusCode).json({ error });
+}

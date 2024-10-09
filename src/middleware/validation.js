@@ -1,27 +1,33 @@
 import { body, validationResult } from 'express-validator';
 
 /**
- * Validierungsmiddleware für Feedback-Formulare.
+ * Middleware zur Validierung von Feedback-Daten.
  * 
- * Diese Middleware validiert die Felder 'title' und 'text' im Feedback-Formular.
- * - 'title' muss ausgefüllt sein, andernfalls wird eine Fehlermeldung zurückgegeben.
- * - 'text' muss ebenfalls ausgefüllt sein, andernfalls wird eine Fehlermeldung zurückgegeben.
+ * Diese Middleware prüft, ob die Felder 'title' und 'text' in der Anfrage vorhanden und nicht leer sind.
+ * Wenn die Validierung fehlschlägt, wird eine 400-Fehlermeldung mit den Validierungsfehlern zurückgegeben.
  * 
- * Bei einer fehlerhaften Validierung wird eine JSON-Antwort mit den Fehlern und einem HTTP-Statuscode 400 gesendet.
+ * @function feedbackValidation
+ * @param {Object} req - Das Anfrageobjekt, das die HTTP-Anfrage-Daten enthält.
+ * @param {Object} res - Das Antwortobjekt, um die HTTP-Antwort an den Client zu senden.
+ * @param {Function} next - Die nächste Middleware-Funktion im Stapel.
  */
 export const feedbackValidation = [
-    // Überprüft, ob das 'title'-Feld nicht leer ist
+    // Validierung für das 'title'-Feld: Es darf nicht leer sein
     body('title').notEmpty().withMessage("Titel ist erforderlich."),
     
-    // Überprüft, ob das 'text'-Feld nicht leer ist
+    // Validierung für das 'text'-Feld: Es darf nicht leer sein
     body('text').notEmpty().withMessage("Text ist erforderlich."),
-
-    /**
-     * Überprüft, ob Validierungsfehler vorhanden sind.
-     * 
-     * @param {Request} req - Das eingehende Anforderungsobjekt.
-     * @param {Response} res - Das Antwortobjekt, um die Antwort zu senden.
-     * @param {Function} next - Die nächste Middleware-Funktion im Stapel.
-     * 
-     * Falls Fehler vorhanden sind, wird eine JSON-Antwort mit den Fehlern zurückgegeben.
     
+    // Middleware zur Überprüfung der Validierungsergebnisse
+    (req, res, next) => {
+        const errors = validationResult(req);
+        
+        // Wenn Fehler vorhanden sind, sende eine 400-Antwort mit den Fehlern
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        // Wenn keine Fehler vorhanden sind, gehe zur nächsten Middleware oder Route-Handler
+        next();
+    }
+];

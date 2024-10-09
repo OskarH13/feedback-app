@@ -7,71 +7,69 @@ const feedbackRouter = express.Router();
 
 /**
  * POST /feedback
+ * Fügt ein neues Feedback hinzu.
  * 
- * Fügt neues Feedback hinzu.
- * 
- * @route {POST} /feedback
- * @param {Object} req - Das Anforderungsobjekt enthält das Feedback in req.body (title, text).
- * @param {Object} res - Das Antwortobjekt, das das Ergebnis der Anfrage an den Client sendet.
- * 
- * Validierungsmiddleware: Stellt sicher, dass die Felder 'title' und 'text' ausgefüllt sind.
- * Erfolgreiche Anfrage: Speichert das Feedback und gibt eine Erfolgsmeldung zurück.
- * Fehlerhafte Anfrage: Gibt eine Fehlermeldung zurück, wenn ein Fehler auftritt.
+ * @name POST/feedback
+ * @function
+ * @memberof module:feedbackRouter
+ * @param {Object} req - Das Anfrageobjekt, das die Feedbackdaten enthält (title, text).
+ * @param {Object} res - Das Antwortobjekt, um eine HTTP-Antwort an den Client zu senden.
+ * @returns {JSON} Erfolgreiche Antwort mit dem gespeicherten Feedback oder Fehlermeldung.
  */
 feedbackRouter.post('/feedback', feedbackValidation, async (req, res) => { 
     try {
-        const { title, text } = req.body;  // Extrahiert title und text aus dem Anfrage-Body
-        const newFeedback = await addFeedback(title, text);  // Fügt das Feedback in die Datenbank ein
-        sendSuccess(res, newFeedback, "Feedback erfolgreich gespeichert.");  // Erfolgreiche Antwort
+        const { title, text } = req.body;
+        const newFeedback = await addFeedback(title, text);
+        sendSuccess(res, newFeedback, "Feedback erfolgreich gespeichert.", 201);
     } catch (error) {
-        sendError(res, "Fehler beim Speichern des Feedbacks.");  // Fehlerhafte Antwort
+        sendError(res, "Fehler beim Speichern des Feedbacks.");
     }
 });
 
 /**
  * GET /feedback
+ * Gibt alle Feedback-Einträge zurück.
  * 
- * Ruft alle Feedback-Einträge ab.
- * 
- * @route {GET} /feedback
- * @param {Object} req - Das Anforderungsobjekt.
- * @param {Object} res - Das Antwortsobjekt, das die Feedback-Daten an den Client sendet.
- * 
- * Erfolgreiche Anfrage: Gibt alle gespeicherten Feedback-Einträge zurück.
- * Fehlerhafte Anfrage: Gibt eine Fehlermeldung zurück, wenn ein Fehler auftritt.
+ * @name GET/feedback
+ * @function
+ * @memberof module:feedbackRouter
+ * @param {Object} req - Das Anfrageobjekt.
+ * @param {Object} res - Das Antwortobjekt, um eine HTTP-Antwort an den Client zu senden.
+ * @returns {JSON} Erfolgreiche Antwort mit einer Liste aller Feedback-Einträge oder Fehlermeldung.
  */
 feedbackRouter.get('/feedback', async (req, res) => {
+
     try {
-        const feedback = await getAllFeedback();  // Ruft alle Feedbacks aus der Datenbank ab
-        sendSuccess(res, feedback, "Feedback erfolgreich abgefragt.");  // Erfolgreiche Antwort
+        const feedback = await getAllFeedback();
+        sendSuccess(res, feedback, "Feedback erfolgreich abgefragt.");
+
     } catch (error) {
-        sendError(res, "Fehler beim Abruf des Feedbacks.");  // Fehlerhafte Antwort
+        sendError(res, "Fehler beim Abruf des Feedbacks.");
     }
 });
 
 /**
  * DELETE /feedback/:title
+ * Löscht ein Feedback basierend auf dem übergebenen Titel.
  * 
- * Löscht ein Feedback basierend auf dem Titel.
- * 
- * @route {DELETE} /feedback/:title
- * @param {Object} req - Das Anforderungsobjekt enthält den Titel als URL-Parameter.
- * @param {Object} res - Das Antwortsobjekt, das das Ergebnis der Anfrage an den Client sendet.
- * 
- * Erfolgreiche Anfrage: Löscht das Feedback und gibt eine Erfolgsmeldung zurück.
- * Fehlerhafte Anfrage: Gibt eine Fehlermeldung zurück, wenn der Titel nicht gefunden oder ein anderer Fehler auftritt.
+ * @name DELETE/feedback/:title
+ * @function
+ * @memberof module:feedbackRouter
+ * @param {Object} req - Das Anfrageobjekt mit dem zu löschenden Feedback-Titel als Parameter.
+ * @param {Object} res - Das Antwortobjekt, um eine HTTP-Antwort an den Client zu senden.
+ * @returns {JSON} Erfolgreiche Antwort oder Fehlermeldung, wenn das Feedback nicht gefunden wurde.
  */
 feedbackRouter.delete('/feedback/:title', async (req, res) => {
     try {
-        const { title } = req.params;  // Extrahiert den Titel aus den URL-Parametern
-        const result = await deleteFeedbackByTitle(title);  // Löscht das Feedback basierend auf dem Titel
-        
+        const { title } = req.params;
+
+        const result = await deleteFeedbackByTitle(title);
         if (result.rowCount === 0) {
-            return sendError(res, "Feedback nicht gefunden", 404);  // Feedback wurde nicht gefunden
+            return sendError(res, "Feedback nicht gefunden", 404);
         }
-        sendSuccess(res, null, "Feedback erfolgreich gelöscht.");  // Erfolgreiche Löschung
+        sendSuccess(res, null, "Feedback erfolgreich gelöscht.");
     } catch (error) {
-        sendError(res, "Fehler beim Löschen des Feedbacks.");  // Fehlerhafte Antwort
+        sendError(res, "Fehler beim Löschen des Feedbacks.");
     }
 });
 

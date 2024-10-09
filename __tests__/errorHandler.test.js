@@ -1,23 +1,35 @@
 // __tests__/errorHandler.test.js
-import { errorHandler } from '../middlewares/errorHandler';
-import express from 'express';
-import request from 'supertest';
-
-const app = express();
-
-// Definiere eine Route, die absichtlich einen Fehler auslöst
-app.get('/error', (req, res) => {
-    throw new Error('Test Error');
-});
-
-// Anwenden der Error-Handler-Middleware
-app.use(errorHandler);
+import { errorHandler } from '../src/middleware/errorHandler';
 
 describe('Error Handler Middleware', () => {
-    it('should handle errors and return 500', async () => {
-        const response = await request(app).get('/error');
+    let mockReq, mockRes, mockNext;
 
-        expect(response.status).toBe(500);
-        expect(response.body.error).toBe('Internal Server Error');
+    beforeEach(() => {
+        mockReq = {};
+        mockRes = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
+        };
+        mockNext = jest.fn();
+
+        // Mocking console.error to avoid actual logging in the test output
+        jest.spyOn(console, 'error').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('soll 500 und "Internal Server Error" zurückgeben und den Fehler loggen', () => {
+        const mockError = new Error('Test Error');
+
+        errorHandler(mockError, mockReq, mockRes, mockNext);
+
+        // Überprüfe, ob der Fehler geloggt wurde
+        expect(console.error).toHaveBeenCalledWith(mockError.stack);
+
+        // Überprüfe, ob die richtige Antwort gesendet wurde
+        expect(mockRes.status).toHaveBeenCalledWith(500);
+        expect(mockRes.json).toHaveBeenCalledWith({ error: "Internal Server Error" });
     });
 });
