@@ -11,9 +11,9 @@ pipeline {
     }
     
     environment {
-        GITHUB_REPO = 'https://github.com/Gulcan82/Galina-feedback-app.git'
+        GITHUB_REPO = 'https://github.com/OskarH13/Galina-feedback-app.git'
         DOCKER_CREDENTIALS_ID = 'dockerhub-token'
-        DOCKER_REPO = 'gulcan82/g-feedback-app'
+        DOCKER_REPO = 'OskarH13/g-feedback-app'
         IMAGE_TAG = "${BUILD_NUMBER}"
         DOCKER_IMAGE = "${DOCKER_REPO}:${IMAGE_TAG}"
     }
