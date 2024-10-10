@@ -16,20 +16,41 @@ describe('Response Helper', () => {
         jest.clearAllMocks();
     });
 
-    it('should send success response with default message', () => {
-        sendSuccess(mockRes, mockData)
+    // Test for sendSuccess with default values
+    it('should send success response with default message and status code', () => {
+        sendSuccess(mockRes, mockData);
 
-        expect(mockRes.status).toHaveBeenCalledWith(200);
+        expect(mockRes.status).toHaveBeenCalledWith(200);  // Default status code
         expect(mockRes.json).toHaveBeenCalledWith({
-            message: 'Anfrage erfolgreich.',
+            message: 'Request successful.',  // Default message
             data: mockData
         });
     });
 
-    it('should send error response with custom status code', () => {
-        sendError(mockRes, 'Es gibt einen Fehler in der Anfrage.', 400);
+    // Test for sendSuccess with custom message and status code
+    it('should send success response with custom message and status code', () => {
+        sendSuccess(mockRes, mockData, 'Custom success message', 201);
 
-        expect(mockRes.status).toHaveBeenCalledWith(400);
-        expect(mockRes.json).toHaveBeenCalledWith({ error: 'Es gibt einen Fehler in der Anfrage.' });
+        expect(mockRes.status).toHaveBeenCalledWith(201);  // Custom status code
+        expect(mockRes.json).toHaveBeenCalledWith({
+            message: 'Custom success message',  // Custom message
+            data: mockData
+        });
+    });
+
+    // Test for sendError with default status code (500)
+    it('should send error response with default status code', () => {
+        sendError(mockRes, 'Default error message');
+
+        expect(mockRes.status).toHaveBeenCalledWith(500);  // Default status code
+        expect(mockRes.json).toHaveBeenCalledWith({ error: 'Default error message' });
+    });
+
+    // Test for sendError with custom status code
+    it('should send error response with custom status code', () => {
+        sendError(mockRes, 'Custom error message', 400);
+
+        expect(mockRes.status).toHaveBeenCalledWith(400);  // Custom status code
+        expect(mockRes.json).toHaveBeenCalledWith({ error: 'Custom error message' });
     });
 });
