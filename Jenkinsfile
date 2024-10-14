@@ -22,7 +22,7 @@ pipeline {
         stage('Checkout') {           
             steps {
                 echo 'Checking out code...'
-                git url: "${GITHUB_REPO}", branch: 'refactoring'
+                git url: "${GITHUB_REPO}", branch: 'main'
             }            
         }
         stage('Run Unit Tests') {
@@ -31,12 +31,12 @@ pipeline {
                 container('node') {
                     sh '''
                         npm install
-                        npm test -- --maxWorkers=50%
+                        npm test  -- --maxWorkers=50%
                     '''
                 }
                 echo 'Unit tests completed successfully.'
             }
-        }
+        }       
         stage('Terraform Init') {
             steps {
                 echo 'Initializing Terraform...'
@@ -96,7 +96,7 @@ pipeline {
                     }
                 }
             }
-        }   
+        } 
         stage('Docker Build') {   
             steps {
                 echo 'Building the Docker image...'
@@ -221,4 +221,4 @@ pipeline {
             echo 'Docker image successfully pushed with "latest" tag.'
         }
     }   
-}  
+}
